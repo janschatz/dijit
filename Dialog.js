@@ -437,33 +437,14 @@ define([
 					viewport.h *= this.maxRatio;
 
 					var bb = domGeometry.position(this.domNode);
-					this._shrunk = false;
-					// First check and limit width, because limiting the width may increase the hieght due to word wrapping.
-					if(bb.w >= viewport.w){
+					if(bb.w >= viewport.w || bb.h >= viewport.h){
 						dim = {
-							w: viewport.w
+							w: Math.min(bb.w, viewport.w),
+							h: Math.min(bb.h, viewport.h)
 						};
-						domGeometry.setMarginBox(this.domNode, dim);
-						bb = domGeometry.position(this.domNode);
 						this._shrunk = true;
-					}
-					// Now check and limit the height
-					if(bb.h >= viewport.h){
-						if(!dim){
-							dim = {
-								w: bb.w
-							};
-						}
-						dim.h = viewport.h;
-						this._shrunk = true;
-					}
-					if(dim){
-						if(!dim.w){
-							dim.w = bb.w;
-						}
-						if(!dim.h){
-							dim.h = bb.h;
-						}
+					}else{
+						this._shrunk = false;
 					}
 				}
 
